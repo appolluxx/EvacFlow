@@ -23,8 +23,8 @@ import {
 } from 'lucide-react';
 
 export const App: React.FC = () => {
-  // 1. Building Dataset Selection
-  const [selectedBuildingId, setSelectedBuildingId] = useState<string>('synthetic-school-3f-756');
+  // 1. Building Dataset Selection (Default to Building 6 model matching the diagram)
+  const [selectedBuildingId, setSelectedBuildingId] = useState<string>('building-6-courtyard-model');
   const [customBuilding, setCustomBuilding] = useState<BuildingData | null>(null);
 
   const activeBuilding: BuildingData = useMemo(() => {
@@ -37,14 +37,14 @@ export const App: React.FC = () => {
     return defaultSchoolBuilding;
   }, [selectedBuildingId, customBuilding]);
 
-  // Available floors from building metadata
+  // Available floors from building metadata (0 = Overview / All floors)
   const availableFloors = activeBuilding.metadata.floors || [1, 2, 3];
-  const [selectedFloor, setSelectedFloor] = useState<number>(availableFloors[availableFloors.length - 1]);
+  const [selectedFloor, setSelectedFloor] = useState<number>(0);
 
   // Update selected floor if active building floors change
   useEffect(() => {
-    if (!availableFloors.includes(selectedFloor)) {
-      setSelectedFloor(availableFloors[0]);
+    if (selectedFloor !== 0 && !availableFloors.includes(selectedFloor)) {
+      setSelectedFloor(0);
     }
   }, [availableFloors, selectedFloor]);
 

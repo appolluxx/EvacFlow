@@ -44,23 +44,23 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
   onSeedChange,
 }) => {
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-4">
+    <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-4 shadow-lg">
       <div className="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-slate-800">
         {/* Building Selector */}
         <div className="flex items-center gap-2">
           <label className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
-            Model:
+            แบบจำลองอาคาร:
           </label>
           <select
             value={selectedBuildingId}
             onChange={(e) => onBuildingChange(e.target.value)}
-            className="bg-slate-950 border border-slate-700 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="bg-slate-950 border border-slate-700 text-xs text-slate-200 font-medium rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           >
-            <option value="synthetic-school-3f-756">
-              Default 3-Story School Model (756 Occupants)
-            </option>
             <option value="building-6-courtyard-model">
-              Building 6 (เฉลิมพระเกียรติ 72 พรรษา 4 Zones)
+              อาคาร 6 ตึกเฉลิมพระเกียรติ 72 พรรษา (ผัง 4 โซนเหมือนในรูป)
+            </option>
+            <option value="synthetic-school-3f-756">
+              Default 3-Story School Model (แบบจำลองสังเคราะห์ 756 คน)
             </option>
           </select>
         </div>
@@ -68,8 +68,18 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
         {/* Floor Tabs */}
         <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800">
           <span className="text-xs text-slate-400 px-2 flex items-center gap-1 font-medium">
-            <Layers className="w-3.5 h-3.5" /> Floor:
+            <Layers className="w-3.5 h-3.5" /> มุมมองชั้น:
           </span>
+          <button
+            onClick={() => onFloorChange(0)}
+            className={`px-3 py-1 text-xs font-semibold rounded-md transition ${
+              selectedFloor === 0
+                ? 'bg-indigo-600 text-white shadow'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+            }`}
+          >
+            ผังรวมตึก 6 (Overview)
+          </button>
           {availableFloors.map((floor) => (
             <button
               key={floor}
@@ -80,7 +90,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
               }`}
             >
-              Floor {floor}
+              ชั้น {floor}
             </button>
           ))}
         </div>
@@ -102,7 +112,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                {sc}
+                {sc === 'ZONING' ? 'ZONING (ตาม 4 สีในรูป)' : sc}
               </button>
             ))}
           </div>
@@ -120,11 +130,11 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
           >
             {isPlaying ? (
               <>
-                <Pause className="w-4 h-4" /> Pause
+                <Pause className="w-4 h-4" /> หยุดชั่วคราว (Pause)
               </>
             ) : (
               <>
-                <Play className="w-4 h-4" /> Run Simulation
+                <Play className="w-4 h-4" /> เริ่มจำลองการอพยพ
               </>
             )}
           </button>
@@ -133,23 +143,23 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
             onClick={onStep}
             disabled={isPlaying}
             className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-200 transition"
-            title="Single Step (0.1s)"
+            title="ขยับทีละสเต็ป (0.1s)"
           >
-            <FastForward className="w-3.5 h-3.5" /> Step
+            <FastForward className="w-3.5 h-3.5" /> สเต็ป
           </button>
 
           <button
             onClick={onReset}
             className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
-            title="Reset Simulation"
+            title="รีเซ็ตตำแหน่งคน"
           >
-            <RotateCcw className="w-3.5 h-3.5" /> Reset
+            <RotateCcw className="w-3.5 h-3.5" /> รีเซ็ต
           </button>
         </div>
 
         {/* Speed Controls */}
         <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800">
-          <span className="text-[11px] text-slate-500 px-1 font-medium">Speed:</span>
+          <span className="text-[11px] text-slate-500 px-1 font-medium">ความเร็ว:</span>
           {[1, 2, 5, 10].map((spd) => (
             <button
               key={spd}
@@ -175,7 +185,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                 : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
             }`}
           >
-            <Flame className="w-3.5 h-3.5" /> Heatmap
+            <Flame className="w-3.5 h-3.5" /> Heatmap ความหนาแน่น
           </button>
 
           <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 px-2 py-1 rounded-lg text-xs">
@@ -192,7 +202,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
             onClick={onOpenBatchModal}
             className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-indigo-200 transition"
           >
-            Run Batch Experiments (10x)
+            รันการทดลองเปรียบเทียบ (Batch 10x)
           </button>
         </div>
       </div>
